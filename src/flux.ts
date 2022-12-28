@@ -1,5 +1,3 @@
-import fse from 'fs-extra';
-import path from 'path';
 import ssh2 from 'ssh2';
 
 interface FluxNode {
@@ -88,11 +86,7 @@ function refreshNode(node: FluxNode) {
   });
 }
 
-export async function manageFlux() {
-  const filePath = path.resolve('data', 'flux.json');
-  if (!fse.existsSync(filePath)) return;
-
-  const data = fse.readFileSync(filePath, { encoding: 'utf-8' });
+export async function manageFlux(data: string) {
   const nodes = parseData(data);
   for (const node of nodes) {
     try {
