@@ -5,7 +5,11 @@
     "sourceType": "module",
     "project": "./tsconfig.eslint.json"
   },
-  "plugins": [ "@typescript-eslint", "prettier", "simple-import-sort"],
+  "plugins": [
+    "@typescript-eslint",
+    "prettier",
+    "simple-import-sort"
+  ],
   "extends": [
     "plugin:@typescript-eslint/recommended",
     "plugin:prettier/recommended"
@@ -24,6 +28,5 @@
     "prettier/prettier": "off",
     "simple-import-sort/imports": "error",
     "simple-import-sort/exports": "error"
-  },
-  "ignorePatterns": ["src/**/*.js"]
+  }
 }

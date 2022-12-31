@@ -30,7 +30,7 @@ function refreshNode(node: FluxNode) {
         console.log(`PROXY ${node.proxyHost} :: connection ready`);
         baseConn.forwardOut('127.0.0.1', 8080, node.nodeHost, 22, (err, stream) => {
           if (err) {
-            console.log('PROXY :: forwardOut error: ' + err);
+            console.log(`PROXY :: forwardOut error: ${err}`);
             reject(err);
             baseConn.end();
           }
@@ -58,7 +58,7 @@ function refreshNode(node: FluxNode) {
       console.log(`NODE ${node.nodeHost} :: connection ready`);
       conn.shell((err, stream) => {
         if (err) {
-          console.log('SECOND :: shell error: ' + err);
+          console.log(`SECOND :: shell error: ${err}`);
           conn.end();
           baseConn.end();
           reject(err);
@@ -73,7 +73,7 @@ function refreshNode(node: FluxNode) {
             resolve();
           })
           .on('data', (data: Buffer) => {
-            console.log('OUTPUT :: ' + data);
+            console.log(`OUTPUT :: ${data}`);
             if (data.indexOf('FINISHED') === 0) {
               conn.end();
             }

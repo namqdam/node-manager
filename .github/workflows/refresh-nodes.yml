@@ -2,6 +2,9 @@ name: Refresh Node
 
 on:
   workflow_dispatch:
+  schedule:
+    # This job runs at 19:00 UTC every Saturday
+    - cron: '0 19 * * 6'
 
 jobs:
   run:

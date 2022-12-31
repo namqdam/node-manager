@@ -1,0 +1,12 @@
+{
+  "nodes": [
+    {
+      "proxyHost": "xxx.xxx.xxx.xxx",
+      "proxyUsername": "root",
+      "proxyPassword": "123456",
+      "nodeHost": "xxx.xxx.xxx.xxx",
+      "nodeUsername": "node",
+      "nodePassword": "abcdef"
+    }
+  ]
+}
