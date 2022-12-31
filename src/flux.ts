@@ -19,7 +19,7 @@ function parseData(data: string): FluxNode[] {
   }
 }
 
-function refreshNode(node: FluxNode) {
+function refresh(node: FluxNode) {
   const baseConn = new ssh2.Client();
   const conn = new ssh2.Client();
 
@@ -27,7 +27,6 @@ function refreshNode(node: FluxNode) {
     baseConn
       .on('error', console.log)
       .on('ready', () => {
-        console.log(`PROXY ${node.proxyHost} :: connection ready`);
         baseConn.forwardOut('127.0.0.1', 8080, node.nodeHost, 22, (err, stream) => {
           if (err) {
             console.log(`PROXY :: forwardOut error: ${err}`);
@@ -55,10 +54,9 @@ function refreshNode(node: FluxNode) {
       });
 
     conn.on('error', console.log).on('ready', function () {
-      console.log(`NODE ${node.nodeHost} :: connection ready`);
       conn.shell((err, stream) => {
         if (err) {
-          console.log(`SECOND :: shell error: ${err}`);
+          console.log(`NODE :: shell error: ${err}`);
           conn.end();
           baseConn.end();
           reject(err);
@@ -68,12 +66,11 @@ function refreshNode(node: FluxNode) {
             console.log('ERROR :: ', err);
           })
           .on('close', () => {
-            console.log('Stream :: close');
+            console.log('STREAM :: close');
             baseConn.end();
             resolve();
           })
           .on('data', (data: Buffer) => {
-            console.log(`OUTPUT :: ${data}`);
             if (data.indexOf('FINISHED') === 0) {
               conn.end();
             }
@@ -86,14 +83,25 @@ function refreshNode(node: FluxNode) {
   });
 }
 
+function maskHost(host: string, excludeIndexes: number[]) {
+  const parts = host.split('.');
+  const makeX = (index: number) => {
+    if (excludeIndexes.indexOf(index) > -1) return parts[index];
+    return parts[index].replace(/./g, '*');
+  };
+
+  if (parts.length !== 4) return '';
+  return `${makeX(0)}.${makeX(1)}.${makeX(2)}.${makeX(3)}`;
+}
+
 export async function manageFlux(data: string) {
   const nodes = parseData(data);
-  for (const node of nodes) {
+  for (const [index, node] of nodes.entries()) {
     try {
-      await refreshNode(node);
+      console.log(`Working on index ${index} node ${maskHost(node.nodeHost, [3])}`);
+      await refresh(node);
     } catch (error) {
-      console.log(error);
+      console.log(`Item at index ${index} has error ${error}`);
     }
   }
-  console.log('FINISHED');
 }

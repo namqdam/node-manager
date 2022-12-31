@@ -1,4 +1,4 @@
-name: Refresh Node
+name: Refresh
 
 on:
   workflow_dispatch:
