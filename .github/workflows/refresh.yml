@@ -28,3 +28,6 @@ jobs:
         run: npm run start
         env:
           DATA: ${{ secrets.DATA }}
+
+      - name: Keep Alive
+        uses: gautamkrishnar/keepalive-workflow@v1
